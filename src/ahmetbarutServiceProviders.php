@@ -25,7 +25,7 @@ class ahmetbarutServiceProviders extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . "/routes/multi_lang.php");
         $this->publishes([
-            __DIR__ . "./routes" => base_path("routes/"),
+            __DIR__ . "/routes" => base_path("routes/"),
         ]);
     }
 }
