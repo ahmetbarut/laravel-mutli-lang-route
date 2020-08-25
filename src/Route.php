@@ -5,8 +5,6 @@
  */
 namespace ahmetbarut\Multilang;
 
-use Exception;
-
 class Route
 {
     /**
@@ -35,9 +33,7 @@ class Route
     public function __construct($locale = null)
     {
         self::$routes = include base_path("routes/multi_lang.php");
-        self::$acceptedLocale = [
-            "tr", "en"
-        ];
+        self::$acceptedLocale = include base_path("config/multi_lang.php");
         $this->locale = $locale;
     }
 
