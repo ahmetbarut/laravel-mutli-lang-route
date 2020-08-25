@@ -14,12 +14,5 @@
             "ahmetbarut\\Multilang\\": "src"
         }
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "ahmetbarut\\Multilang\\ahmetbarutServiceProviders"
-            ]
-        }
-    },
     "require": {}
 }
