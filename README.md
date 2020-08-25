@@ -9,10 +9,12 @@ Symfony rotalarına benzer çoklu dil rota paketi | Multilanguage route package 
 ```php 
     [
         ...
-        ahmetbarut\Multilang\ahmetbarutServiceProviders::class
+        ahmetbarut\Multilang\ahmetbarutServiceProviders::class,
     ]
 ``` 
-Sonra | Then ```php artisan vendor:publish --provider="ahmetbarut\Multilang\ahmetbarutServiceProviders"```
+Sonra | Then ```bash
+php artisan vendor:publish --provider="ahmetbarut\Multilang\ahmetbarutServiceProviders"
+```
 
 ```app/Providers/RouteServiceProvider.php``` 
 ```php
