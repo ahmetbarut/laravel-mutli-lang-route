@@ -12,7 +12,8 @@ Symfony rotalarına benzer çoklu dil rota paketi | Multilanguage route package 
         ahmetbarut\Multilang\ahmetbarutServiceProviders::class,
     ]
 ``` 
-Sonra | Then ```bash
+Sonra | Then 
+```bash
 php artisan vendor:publish --provider="ahmetbarut\Multilang\ahmetbarutServiceProviders"
 ```
 
