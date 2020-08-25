@@ -1,0 +1,25 @@
+{
+    "name": "ahmetbarut/laravl-multi-route",
+    "description": "Laravel'de az kod ile çoklu rota kullanımı",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ahmet Barut",
+            "email": "ahmetbarut588@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ahmetbarut\\Multilang\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ahmetbarut\\Multilang\\ahmetbarutServiceProviders"
+            ]
+        }
+    },
+    "require": {}
+}
