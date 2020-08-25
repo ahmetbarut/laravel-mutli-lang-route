@@ -1,5 +1,5 @@
 {
-    "name": "ahmetbarut/laravl-multi-route",
+    "name": "ahmetbarut/laravel-multi-route",
     "description": "Laravel' çoklu dil rota kullanımı",
     "type": "library",
     "license": "MIT",
