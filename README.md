@@ -2,7 +2,7 @@
 Symfony rotalarına benzer çoklu dil rota paketi | Multilanguage route package similar to Symfony routes
 ### Kurulum | Setup
 ```bash 
-    composer require ahmetbarut/laravel-multi-route:dev-master
+    composer require ahmetbarut/laravel-multi-route
 ```
 ### Konfigürasyon | Configuration
 ```config/app.php``` Dosyasına ekleyin | add to file
