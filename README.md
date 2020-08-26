@@ -17,7 +17,7 @@ Sonra | Then
 php artisan vendor:publish --provider="ahmetbarut\Multilang\ahmetbarutServiceProviders"
 ```
 
->app/Providers/RouteServiceProvider.php
+```app/Providers/RouteServiceProvider.php```
 Rota ilk çalıştığında burası yüklendiğinden dolayı aşağıdai kodları ekleyiniz. | Since this is loaded when the route first runs, add the following codes.
 ```php
     use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ Rota ilk çalıştığında burası yüklendiğinden dolayı aşağıdai kodlar�
     }
 ```
 
->routes/web.php 
+```routes/web.php```
 Dosyasına bunları ekleyin | Add them to the file
 ```php 
     use ahmetbarut\Multilang\Route as MultiLangRoute;
