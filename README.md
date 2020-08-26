@@ -31,7 +31,7 @@ Rota ilk çalıştığında burası yüklendiğinden dolayı aşağıdai kodlar�
         $this->mapWebRoutes();
     }
 ```
-```mapWebRoutes``` Fonksiyonuna ```->prefix($this->locale)``` ekleyin. Aksi takdirde her rota tanımladığınızda lokasyon belirtmek zorunda kalırsınız. |Add ```-> prefix ($ this-> locale)``` to the ```mapWebRoutes``` Function. Otherwise, you will have to specify a location every time you define a route.
+```mapWebRoutes``` Fonksiyonuna ```->prefix($this->locale)``` ekleyin. Aksi takdirde her rota tanımladığınızda lokasyon belirtmek zorunda kalırsınız. | Add ```->prefix($this->locale)``` to the ```mapWebRoutes``` Function. Otherwise, you will have to specify a location every time you define a route.
 ```php
     protected function mapWebRoutes()
     {
@@ -75,12 +75,13 @@ Dosyasına bunları ekleyin | Add them to the file
             MultiLangRoute::name("contact"), // burda sadece rotaya verdiğimiz ismi yazıyoruz benim verdiğim contact. | Here we only write the name we give to the route, contact me.
             "TestController@contact")->name("contact");
 ```
+### Rota Belirleme | Setting a Route 
 ```routes/multi_lang.php``` dosyasına gidip ordan rotaları belirtiyoruz. | We go to the file and specify the routes from there.
 ```php
 return [
     "contact" => [
-        "en" => "en/contact",
-        "tr" => "tr/iletisim"
+        "en" => "contact",
+        "tr" => "iletisim"
     ]
  ];
 ```
