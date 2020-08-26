@@ -5,6 +5,7 @@
  */
 namespace ahmetbarut\Multilang;
 
+
 class Route
 {
     /**
@@ -14,16 +15,16 @@ class Route
     protected static array $routes;
 
     /**
-     * Kabul edilen diller | Accepted languages
-     * @var array $acceptedLocale
+     * Konfigürasyon | Configuration
+     * @var array $config
      */
-    protected static array $acceptedLocale;
+    protected static array $config;
 
     /**
      * Dil'i depolar | Stores the language
      * @var $locale
      */
-    public $locale;
+    protected static $locale;
 
 
     /**
@@ -33,8 +34,8 @@ class Route
     public function __construct($locale = null)
     {
         self::$routes = include base_path("routes/multi_lang.php");
-        self::$acceptedLocale = include base_path("config/multi_lang.php");
-        $this->locale = $locale;
+        self::$config = include base_path("config/multi_lang.php");
+        self::$locale = $locale;
     }
 
     /**
@@ -42,12 +43,25 @@ class Route
      * @param string $locale
      * @return string $routes
      */
-    public function name(string $name, string $locale = null)
+    public static function name(string $name, string $locale = null)
     {
-        if (!in_array($this->locale, self::$acceptedLocale)) {
-            $this->locale = "en"; // Varsayılan | Default
+        if (!in_array(self::$locale, self::$config["accepted_language"])) {
+            self::$locale = self::$config["default_language"]; // Varsayılan | Default
+        }
+        if($locale !== null){
+            self::$locale = $locale;
         }
 
-        return self::$routes[$name][$this->locale];
+        return self::$routes[$name][self::$locale];
+    }
+
+    /**
+     * Lokasyon/Dil Değiştirir. | Changes Location/Language.
+     * @param string $locale
+     * @return void
+     */
+    public static function setLocale($locale)
+    {
+        self::$locale = $locale;
     }
 }
