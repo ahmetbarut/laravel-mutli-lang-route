@@ -5,9 +5,9 @@ Symfony rotalarına benzer çoklu dil rota paketi | Multilanguage route package 
     composer require ahmetbarut/laravel-multi-route:dev-master
 ```
 ### Konfigürasyon | Configuration
-```config/app.php providers``` kısmına ekleyin | add to
+```config/app.php``` Dosyasına ekleyin | add to file
 ```php 
-    [
+    'providers' => [
         ...
         ahmetbarut\Multilang\ahmetbarutServiceProviders::class,
     ]
@@ -17,7 +17,8 @@ Sonra | Then
 php artisan vendor:publish --provider="ahmetbarut\Multilang\ahmetbarutServiceProviders"
 ```
 
-```app/Providers/RouteServiceProvider.php``` 
+>app/Providers/RouteServiceProvider.php
+Rota ilk çalıştığında burası yüklendiğinden dolayı aşağıdai kodları ekleyiniz. | Since this is loaded when the route first runs, add the following codes.
 ```php
     use Illuminate\Http\Request;
     
@@ -30,7 +31,19 @@ php artisan vendor:publish --provider="ahmetbarut\Multilang\ahmetbarutServicePro
         $this->mapWebRoutes();
     }
 ```
-```routes/web.php``` Bunları ekleyin
+```mapWebRoutes``` Fonksiyonuna ```->prefix($this->locale)``` ekleyin. Aksi takdirde her rota tanımladığınızda lokasyon belirtmek zorunda kalırsınız. |Add ```-> prefix ($ this-> locale)``` to the ```mapWebRoutes``` Function. Otherwise, you will have to specify a location every time you define a route.
+```php
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')
+            ->prefix($this->locale)
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
+    }
+```
+
+>routes/web.php 
+Dosyasına bunları ekleyin | Add them to the file
 ```php 
     use ahmetbarut\Multilang\Route as MultiLangRoute;
     use Illuminate\Support\Facades\App;
@@ -84,4 +97,12 @@ return [
 
 ];
 ```
-### final
+### Rotada Parametre Gönderme | Sending Variables in Route
+Parametre gönderme normal rotada olduğu gibi burdada bu şekilde kullanılır. | Parameter sending is used here as in the normal route.
+```php
+"set.lang" => [
+    "tr" => "dil/degistir/{lang}",
+    "en" => "lang/change/{lang}"
+],
+```
+# final
