@@ -31,7 +31,7 @@ class Route
      * @param $locale
      * @return void
      */
-    public static function start($locale = null)
+    public function __construct($locale = null)
     {
         self::$routes = include base_path("routes/multi_lang.php");
         self::$config = include base_path("config/multi_lang.php");
@@ -45,7 +45,6 @@ class Route
      */
     public static function name(string $name, string $locale = null)
     {
-        self::start("tr");
         if (!in_array(self::$locale, self::$config["accepted_language"])) {
             self::$locale = self::$config["default_language"]; // Varsayılan | Default
         }
