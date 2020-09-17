@@ -16,7 +16,42 @@ Sonra | Then
 ```bash
 php artisan vendor:publish --provider="ahmetbarut\Multilang\ahmetbarutServiceProviders"
 ```
+```php
 
+class RouteServiceProvider extends ServiceProvider
+{
+    
+    protected $locale; // bunu ekleyin
+    ...
+}
+```
+## Laravel 8.x
+```app/Providers/RouteServiceProvider.php```
+Rota ilk çalıştığında burası yüklendiğinden dolayı aşağıdai kodları ekleyiniz. | Since this is loaded when the route first runs, add the following codes.
+```php
+    // 1, 2, 3 ve 4 numaraları tüm satırları ekleyin.
+    public function boot()
+    {
+        $this->configureRateLimiting();
+
+        $this->locale = request()->segment(1); // 1.
+        $this->app->setLocale($this->locale); // 2. 
+
+        $this->routes(function () {
+            Route::middleware('web')
+                ->prefix($this->locale) // 3.
+                ->namespace($this->namespace)
+                ->group(base_path('routes/web.php'));
+
+            Route::prefix('api')
+                ->middleware('api')
+                ->prefix($this->locale) // api kullanıyorsanız 4.
+                ->namespace($this->namespace) 
+                ->group(base_path('routes/api.php'));
+    }
+```
+
+## Laravel 7.x 
 ```app/Providers/RouteServiceProvider.php```
 Rota ilk çalıştığında burası yüklendiğinden dolayı aşağıdai kodları ekleyiniz. | Since this is loaded when the route first runs, add the following codes.
 ```php
