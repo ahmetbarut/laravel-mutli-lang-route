@@ -1,6 +1,6 @@
 {
     "name": "ahmetbarut/laravel-multi-lang-route",
-    "description": "Laravel' çoklu dil rota kullanımı",
+    "description": "Laravel çoklu dil rota kullanımı",
     "type": "package",
     "license": "MIT",
     "version": "1.2",
