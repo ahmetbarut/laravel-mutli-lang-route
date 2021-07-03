@@ -47,7 +47,7 @@ class Route
 	 */
     public static function name(string $name, string $locale = null)
     {
-        if (accepted_locale(self::$locale)) {
+        if (!accepted_locale(self::$locale)) {
             self::$locale = self::$config["default_language"]; // Varsayılan | Default
         }
         if($locale !== null){

@@ -6,7 +6,7 @@ if (!function_exists("accepted_locale")) {
 	 * @param string $locale yerel adı
 	 * @return bool
 	 */
-    function accepted_locale(string $locale): bool
+    function accepted_locale(string $locale)
 	{
 		$locales = include base_path("config/multi_lang.php");
 
