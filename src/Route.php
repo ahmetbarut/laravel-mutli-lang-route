@@ -38,14 +38,16 @@ class Route
         self::$locale = $locale;
     }
 
-    /**
-     * @param string $name
-     * @param string $locale
-     * @return string $routes
-     */
+	/**
+	 * Döndürülmesi istenen rotanın değerini döndürür.
+	 * 	eg : home.page => /home
+	 * @param string $name
+	 * @param string|null $locale
+	 * @return string $routes
+	 */
     public static function name(string $name, string $locale = null)
     {
-        if (!in_array(self::$locale, self::$config["accepted_language"])) {
+        if (accepted_locale(self::$locale)) {
             self::$locale = self::$config["default_language"]; // Varsayılan | Default
         }
         if($locale !== null){

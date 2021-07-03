@@ -13,7 +13,10 @@
     "autoload": {
         "psr-4": {
             "ahmetbarut\\Multilang\\": "src"
-        }
+        },
+        "files": [
+            "./src/helper.php"
+        ]
     },
     "require": {}
 }
