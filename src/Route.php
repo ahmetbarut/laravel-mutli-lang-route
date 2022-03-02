@@ -1,31 +1,38 @@
 <?php
 
+namespace AhmetBarut\Multilang;
+
+use AhmetBarut\Multilang\Exceptions\AnnotationNotMatchedException;
+use AhmetBarut\Multilang\Exceptions\MethodNotFoundException;
+use Closure;
+use Illuminate\Support\Facades\Route as FacadesRoute;
+use ReflectionFunction;
+use ReflectionMethod;
+
 /**
  * @author Ahmet Barut - ahmetbarut588@gmail.com
  */
-namespace ahmetbarut\Multilang;
-
 
 class Route
 {
     /**
-     * Diziden dönen rotaları depolar | Stores the routes returned from the array
-     * @var array $routes
-     */
-    protected static array $routes;
-
-    /**
-     * Konfigürasyon | Configuration
-     * @var array $config
-     */
-    protected static array $config;
-
-    /**
-     * Dil'i depolar | Stores the language
+     * Stores the language
      * @var $locale
      */
     protected static $locale;
 
+    /**
+     * Available methods
+     */
+    protected static array $methods = [
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete',
+        'options',
+        'head',
+    ];
 
     /**
      * @param $locale
@@ -33,36 +40,100 @@ class Route
      */
     public function __construct($locale = null)
     {
-        self::$routes = include base_path("routes/multi_lang.php");
-        self::$config = include base_path("config/multi_lang.php");
-        self::$locale = $locale;
-    }
-
-	/**
-	 * Döndürülmesi istenen rotanın değerini döndürür.
-	 * 	eg : home.page => /home
-	 * @param string $name
-	 * @param string|null $locale
-	 * @return string $routes
-	 */
-    public static function name(string $name, string $locale = null)
-    {
-        if (accepted_locale(self::$locale)) {
-            self::$locale = self::$config["default_language"]; // Varsayılan | Default
-        }
-        if($locale !== null){
-            self::$locale = $locale;
-        }
-        return self::$routes[$name][self::$locale];
+        static::$locale = $locale;
     }
 
     /**
-     * Lokasyon/Dil Değiştirir. | Changes Location/Language.
-     * @param string $locale
-     * @return void
+     * Captures routes using Annotation
+     * @param Closure|array $callback
+     * @return mixed|void
      */
-    public static function setLocale($locale)
+    public static function findAnottations(Closure|array $callback, $method, $routeName = "")
     {
-        self::$locale = $locale;
+        if (is_callable($callback)) {
+            $reflection = new ReflectionFunction($callback);
+        }
+
+        if (is_array($callback)) {
+            $reflection = new ReflectionMethod($callback[0], $callback[1]);
+        }
+
+        preg_match('/\@Route\((.*)\)/', $reflection->getDocComment(), $matches);
+
+        $matched = static::stringToArray($matches[1]);
+        if (count($matched) === 0) {
+            $route = explode(',', str_replace(['\'', "\"", " "], '', $matches[1]));
+            $matched[$route[0]] = $route[1];
+        }
+
+        foreach ($matched as $path => $locale) {
+            if (!is_numeric($path) && static::$locale == $locale) {
+                // static::$annotations[$key] = $locale;
+                $routed = FacadesRoute::$method($path, $callback);
+                if ($routeName !== "") {
+                    $routed->name($routeName);
+                }
+            }
+        }
+
+        // throw new AnnotationNotMatchedException("Annotation not matched");
     }
+
+    /**
+     * Converts string values defined in Annotation to array
+     * @param $string
+     * @return array
+     */
+    public static function stringToArray(string $string): array
+    {
+        $matched = [];
+        $array = explode(',', str_replace(['[', ' ', "]"], '', $string));
+
+        foreach ($array as $value) {
+            preg_match('/(.*)=>(.*)/', $value, $matches);
+            if ($matches) {
+                $matched[$matches[1]] = $matches[2];
+            }
+        }
+
+        return $matched;
+    }
+
+    public static function __callStatic($name, $arguments)
+    {
+        if (!in_array($name, static::$methods)) {
+            throw new MethodNotFoundException("Method {$name} not found");
+        }
+        app(static::class);
+
+        $routeName = "";
+
+        if (isset($arguments[2])) {
+            $routeName = $arguments[2];
+        }
+
+        if (is_callable($arguments[0])) {
+            return static::findAnottations($arguments[0], $name, $routeName);
+        }
+
+        if (is_array($arguments[0]) && !isset($arguments[1])) {
+            return static::findAnottations($arguments[0], $name, $routeName);
+        }
+
+        $routes = collect($arguments[0]);
+        $action = $arguments[1];
+        
+        $locale = static::$locale;
+
+        $routes->map(function ($route, $routeLocale) use ($name, $action, $locale, $routeName) {
+            if ($locale == $routeLocale) {
+                $routed = FacadesRoute::$name($route, $action);
+                if ($routeName != "") { 
+                    $routed->name($routeName);
+                }
+            }
+        });
+
+    }
+    
 }

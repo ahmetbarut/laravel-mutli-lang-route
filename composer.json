@@ -12,11 +12,21 @@
     ],
     "autoload": {
         "psr-4": {
-            "ahmetbarut\\Multilang\\": "src"
+            "AhmetBarut\\Multilang\\": "src"
         },
         "files": [
             "./src/helper.php"
         ]
     },
-    "require": {}
+    "require": {
+        "php": ">=7.2.0",
+        "laravel/framework": "^7.0 || ^8.0 || ^9.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AhmetBarut\\Multilang\\Providers\\MultilangServiceProvider"
+            ]
+        }
+    }
 }
