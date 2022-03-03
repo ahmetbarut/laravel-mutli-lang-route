@@ -13,6 +13,10 @@ Multilanguage route package similar to Symfony routes
 
 - Annotation Available
 - Multi-language
+- Middleware
+- Group
+- Prefix
+- Name
 
 ## Usage
 
