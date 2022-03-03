@@ -26,9 +26,9 @@ use App\Http\Controllers\SomeController;
 
 
 Route::get([
-    '/' => 'en',
-    '/tr' => 'tr',
-    '/es' => 'es'
+    'en' => '/',
+    'tr' => '/tr',
+    'es' => '/es'
 ], function () {
     return 'index';
 });
@@ -36,9 +36,9 @@ Route::get([
 // OR
 
 Route::get([
-    '/' => 'en',
-    '/tr' => 'tr',
-    '/es' => 'es'
+    'en' => '/',
+    'tr' => '/tr',
+    'es' => '/es'
 ], [SomeController::class, 'index']);
 ```
 
@@ -56,7 +56,7 @@ use AhmetBarut\Multilang\Route;
 use App\Http\Controllers\SomeController;
 
 /**
- * @Route('/', en)
+ * @Route(en, /en)
  */
 Route::get([SomeController::class ,'index']);
 
@@ -65,7 +65,7 @@ Route::get([SomeController::class ,'index']);
 class SomeController extends Controller
 {
     /**
-     * @Route('/home', en)
+     * @Route(en, /en)
      */
     public function index()
     {
@@ -81,9 +81,7 @@ class SomeController extends Controller
 use AhmetBarut\Multilang\Route;
 use App\Http\Controllers\SomeController;
 
-/**
- * @Route([/ => en, /tr => tr, /es => es])
- */
+
 Route::get([SomeController::class ,'index']);
 
 
@@ -91,7 +89,7 @@ Route::get([SomeController::class ,'index']);
 class SomeController extends Controller
 {
     /**
-     * @Route([/ => en, /tr => tr, /es => es])
+     * @Route([en =>, tr => /tr, es => /es])
      */
     public function index()
     {
@@ -100,24 +98,27 @@ class SomeController extends Controller
 }
 ```
 
-## Usage With Array Name
+>You must use the `group` method to use features such as prefix, global middleware.
+
+## Usage With Name and Mmiddleware
 
 ```php
 
 use AhmetBarut\Multilang\Route;
 use App\Http\Controllers\SomeController;
 
-/**
- * @Route([/ => en, /tr => tr, /es => es])
- */
-Route::get([SomeController::class ,'index'], 'some_route');
+
+Route::group(['middleware' => 'web', 'prefix' => 'hello'], function () {
+    Route::get([SomeController::class, 'index'])->name('home');
+    Route::get([SomeController::class, 'create'])->name('create');
+});
 
 
 // SomeController.php
 class SomeController extends Controller
 {
     /**
-     * @Route([/ => en, /tr => tr, /es => es])
+     * @Route([en => /, tr => /tr, de => /de])
      */
     public function index()
     {

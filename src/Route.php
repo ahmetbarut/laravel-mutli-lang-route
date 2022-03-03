@@ -2,9 +2,9 @@
 
 namespace AhmetBarut\Multilang;
 
-use AhmetBarut\Multilang\Exceptions\AnnotationNotMatchedException;
 use AhmetBarut\Multilang\Exceptions\MethodNotFoundException;
 use Closure;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route as FacadesRoute;
 use ReflectionFunction;
 use ReflectionMethod;
@@ -32,7 +32,14 @@ class Route
         'delete',
         'options',
         'head',
+        'group',
     ];
+
+    /**
+     * Store the route
+     * @var \Illuminate\Routing\Route $route
+     */
+    protected static $route;
 
     /**
      * @param $locale
@@ -48,7 +55,7 @@ class Route
      * @param Closure|array $callback
      * @return mixed|void
      */
-    public static function findAnottations(Closure|array $callback, $method, $routeName = "")
+    public static function findAnottations(Closure|array $callback, $method, $routeName = null)
     {
         if (is_callable($callback)) {
             $reflection = new ReflectionFunction($callback);
@@ -66,16 +73,14 @@ class Route
             $matched[$route[0]] = $route[1];
         }
 
-        foreach ($matched as $path => $locale) {
-            if (!is_numeric($path) && static::$locale == $locale) {
+        foreach ($matched as $locale => $path) {
+            if (!is_numeric($locale) && static::$locale == $locale) {
                 // static::$annotations[$key] = $locale;
-                $routed = FacadesRoute::$method($path, $callback);
-                if ($routeName !== "") {
-                    $routed->name($routeName);
-                }
+                static::setRoute($method, $path, $callback);
             }
         }
 
+        return static::$route;
         // throw new AnnotationNotMatchedException("Annotation not matched");
     }
 
@@ -106,7 +111,7 @@ class Route
         }
         app(static::class);
 
-        $routeName = "";
+        $routeName = null;
 
         if (isset($arguments[2])) {
             $routeName = $arguments[2];
@@ -122,18 +127,25 @@ class Route
 
         $routes = collect($arguments[0]);
         $action = $arguments[1];
-        
+
         $locale = static::$locale;
 
         $routes->map(function ($route, $routeLocale) use ($name, $action, $locale, $routeName) {
             if ($locale == $routeLocale) {
-                $routed = FacadesRoute::$name($route, $action);
-                if ($routeName != "") { 
-                    $routed->name($routeName);
-                }
+                static::setRoute($name, $route, $action);
             }
         });
 
+        return static::$route;
     }
-    
+
+    protected static function setRoute($method, $path, $action)
+    {
+        static::$route = FacadesRoute::$method($path, $action);
+    }
+
+    public static function group($attributes, Closure $callback)
+    {
+        return app(Router::class)->group($attributes, $callback);
+    }
 }
